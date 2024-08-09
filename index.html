@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=auto, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script src="main.js" defer></script>
+    <title>Very Functional Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <h1>A Very Functional Calculator</h1>
+        <div class="calc_body">
+            <div class="calc_screen">
+                <div class="calc_answer"></div>
+            </div>
+            <div class="calc_buttons">
+                <div class="button" id="1"></div>
+                <div class="button" id="2"></div>
+                <div class="button" id="3"></div>
+                <div class="button" id="4"></div>
+                <div class="button" id="5"></div>
+                <div class="button" id="6"></div>
+                <div class="button" id="7"></div>
+                <div class="button" id="8"></div>
+                <div class="button" id="9"></div>
+                <div class="button" id="0"></div>
+                <div class="operations_container">
+                    <div class="button_small"id="add"></div>
+                    <div class="button_small"id="sub"></div>
+                    <div class="button_small"id="mult"></div>
+                    <div class="button_small"id="divi"></div>
+                </div>
+                <div class="button_large" id="submit"></div>
+            </div>
+        </div>
+    </div>
+    <div class="functions_container">
+        <!-- darkmode will make the viewport black aside from where the cursor is acting as a flashlight -->
+        <div class="button" id="dark_mode"></div>
+        <!-- randomize_input will change the positions of all the calc_buttons to make it less intuative to use -->
+        <div class="button" id="randomize_input"></div>
+        <!-- mem_lookup will need to trigger popup to make it easy to loopup values from a memory address -->
+        <div class="button" id="mem_lookup"></div>
+    </div>
+</body>
+</html>
