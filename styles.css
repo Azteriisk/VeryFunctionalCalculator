@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/ds-digital');
+
 :root {
     --text-color: #ededed;
     --bg-color: #111111;
@@ -46,10 +48,24 @@ body {
     transition: border, 300ms;
     cursor:text;
     user-select: text;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;    
 }
 
 .calc_screen:hover {
     border: 1px, solid, var(--border-color-hover);
+}
+
+.calc_answer {
+    padding: 0 30px;
+    font-size: xx-large;
+    font-family: 'DS-Digital', 'Courier New', Courier, monospace;
+    color: var(--text-color);
+    text-align: right;
+    padding-right: 10px;
+    letter-spacing: 3px; /* Spacing to mimic segment gaps */
+    text-shadow: 1px 1px 2px #000;
 }
 
 .calc_buttons {
