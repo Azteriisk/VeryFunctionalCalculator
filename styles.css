@@ -5,7 +5,7 @@
     --bg-color: #111111;
     --border-color: #7c7c7c;
     --border-color-hover: #d8d8d8;
-  }
+}
 
 body {
     margin: 0;
@@ -34,19 +34,19 @@ body {
     min-height: 65vh;
     min-width: 400px;
     max-width: 400px;
-    border: 1px, solid, var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 30px;
     padding: 0px 2vw;
-    transition: border, 300ms;
+    transition: border 300ms, transform 0.5s ease; /* Added transform transition */
 }
 
 .calc_screen {
     margin: 10% 0;
     min-height: 10vh;
-    border: 1px, solid, var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
-    transition: border, 300ms;
-    cursor:text;
+    transition: border 300ms;
+    cursor: text;
     user-select: text;
     display: flex;
     justify-content: flex-end;
@@ -54,7 +54,7 @@ body {
 }
 
 .calc_screen:hover {
-    border: 1px, solid, var(--border-color-hover);
+    border: 1px solid var(--border-color-hover);
 }
 
 .calc_answer {
@@ -80,9 +80,9 @@ body {
 .button {
     height: 60px;
     width: 60px;
-    border: 1px, solid, var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 15px;
-    transition: border, 300ms;
+    transition: border 300ms;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,16 +91,16 @@ body {
 }
 
 .button:hover {
-    border: 1px, solid, var(--border-color-hover);
+    border: 1px solid var(--border-color-hover);
     color: var(--text-color);
 }
 
 .operations_container {
     margin: 0;
     padding: 0;
-    border: 1px, solid, var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 30px;
-    transition: border, 300ms;
+    transition: border 300ms;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -112,9 +112,9 @@ body {
 .button_small {
     height: 60px;
     width: 60px;
-    border: 1px, solid, var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 100%;
-    transition: border, 300ms;
+    transition: border 300ms;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,31 +124,31 @@ body {
 }
 
 .button_small:hover {
-    border: 1px, solid, var(--border-color-hover);
+    border: 1px solid var(--border-color-hover);
     color: var(--text-color);
 }
 
 .button_large {
     grid-column: span 2;
     margin-right: 25px;
-    border: 1px, solid, var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 30px;
-    transition: border, 300ms;
+    transition: border 300ms;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: xx-large;
     color: var(--border-color);
-    cursor:grab;
+    cursor: grab;
 }
 
 .button_large:hover {
-    border: 1px, solid, var(--border-color-hover);
+    border: 1px solid var(--border-color-hover);
     color: var(--text-color);
 }
 
 .button_large:focus, .button_large:active {
-    cursor:grabbing;
+    cursor: grabbing;
 }
 
 .functions_container {
@@ -162,11 +162,11 @@ body {
 }
 
 #dark_mode, #randomize_input, #mem_lookup {
-    cursor:grab;
+    cursor: grab;
 }
 
 #dark_mode:focus, #randomize_input:focus, #mem_lookup:focus, #dark_mode:active, #randomize_input:active, #mem_lookup:active {
-    cursor:grabbing;
+    cursor: grabbing;
 }
 
 #dark_mode img {
@@ -177,7 +177,7 @@ body {
     height: 40px;
     margin-top: 5px;
     filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
-    transition: filter, 300ms;
+    transition: filter 300ms;
 }
 
 #dark_mode:hover img {
@@ -191,7 +191,7 @@ body {
     width: 40px;
     height: 40px;
     filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
-    transition: filter, 300ms;
+    transition: filter 300ms;
 }
 
 #randomize_input:hover img {
@@ -206,7 +206,7 @@ body {
     height: 40px;
     margin-top: 5px;
     filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
-    transition: filter, 300ms;
+    transition: filter 300ms;
 }
 
 #mem_lookup:hover img {
@@ -244,6 +244,3 @@ body {
 @media screen and (min-width: 768px)  {    
     /* Standard Desktop specific rules */
 }
-    
-
-    
