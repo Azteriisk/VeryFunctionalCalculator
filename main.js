@@ -1,6 +1,6 @@
 // Get references to the elements
 const calcAnswer = document.querySelector('.calc_answer');
-const buttons = document.querySelectorAll('.calc_buttons .button'); // Ensure this targets all number buttons
+const buttons = document.querySelectorAll('.calc_buttons .button');
 const operationsContainer = document.querySelector('.operations_container');
 const submitButton = document.getElementById('submit');
 
@@ -11,6 +11,18 @@ let lastOperand = null;
 let lastResult = null;
 let operationPerformed = false;
 
+// Function to rotate the calculator when "5318008" is detected
+function checkForEasterEgg() {
+    const calcBody = document.querySelector('.calc_body');
+    const easterEggNumber = "5318008";
+    
+    if (calcAnswer.textContent.includes(easterEggNumber)) {
+        calcBody.style.transform = "rotate(180deg)";
+    } else {
+        calcBody.style.transform = "rotate(0deg)";
+    }
+}
+
 // Function to update the display
 function updateDisplay(value) {
     if (operationPerformed) {
@@ -19,6 +31,9 @@ function updateDisplay(value) {
     }
     currentInput += value;
     calcAnswer.textContent = currentInput;
+    
+    // Check for the easter egg
+    checkForEasterEgg();
 }
 
 // Function to perform the calculation
@@ -40,6 +55,9 @@ function calculate(repeat = false) {
         }
         currentInput = String(result); // Set current input to the result
         operationPerformed = true; // Mark that an operation was performed
+
+        // Check for the easter egg after calculation
+        checkForEasterEgg();
 
     } catch (error) {
         calcAnswer.textContent = "Error";
