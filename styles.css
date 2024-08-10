@@ -98,14 +98,14 @@ body.dark-mode-active * {
 }
 
 .calc_body {
-    margin-top: 5vh;
+    margin: 1vh 5vh;
     aspect-ratio: 2 / 3;
     min-height: 60vh;
     min-width: 400px;
     max-width: 400px;
     border: 1px solid var(--border-color);
     border-radius: 30px;
-    padding: 0px 2vw;
+    padding: 10px 2vw;
     transition: border 300ms, transform 0.5s ease; /* Added transform transition */
     margin-left: 1vw;
     margin-right: 1vw;
@@ -123,7 +123,8 @@ body.dark-mode-active * {
     user-select: text;
     display: flex;
     justify-content: flex-end;
-    align-items: center;    
+    align-items: center;
+    margin: 20px 20px 20px 20px;
 }
 
 .calc_screen:hover {
@@ -143,11 +144,11 @@ body.dark-mode-active * {
 
 .calc_buttons {
     display: grid;
-    height: 65%;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    height:0;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-items: center;
-    gap: 2vh;
+    gap: 20px 10px;
     user-select: none;
     margin: 0px 20px;
 }
@@ -176,15 +177,15 @@ body.dark-mode-active * {
 .operations_container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* Distribute buttons evenly */
+    justify-content: center; /* Distribute buttons evenly */
     align-items: center;
     grid-column: span 2;
     grid-row: span 2;
     border: 1px solid var(--border-color);
     border-radius: 30px;
     transition: border 300ms;
-    padding: 20px 10px;
-    min-height: 160px;
+    min-height: 140px;
+    padding: .5vh 0;
     margin: 15px 5px 0px;
     transform: translate(0, -15px);
 }
@@ -200,8 +201,9 @@ body.dark-mode-active * {
     align-items: center;
     justify-content: center;
     color: var(--bg-color2);
-    margin: 5px;
+    margin: 1vh .5vw;
     font-size: xx-large;
+    gap: 0;
 }
 
 .button_small:hover {
@@ -223,8 +225,8 @@ body.dark-mode-active * {
     width: 160px;
     color: var(--border-color);
     cursor: grab;
-    height: 80px;
-    transform: translate(0, -5px);
+    height: 70px;
+    transform: translate(0, -15px);
     background-color: var(--bg-color2);
 }
 
