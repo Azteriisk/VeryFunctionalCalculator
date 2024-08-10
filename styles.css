@@ -1,6 +1,8 @@
 @import url('https://fonts.cdnfonts.com/css/ds-digital');
 
 :root {
+    --pointerX: 50vw;
+    --pointerY: 50vh;
     --text-color: #ededed;
     --bg-color: #111111;
     --border-color: #7c7c7c;
@@ -10,7 +12,72 @@
 body {
     margin: 0;
     padding: 0;
-    cursor: crosshair;
+    cursor: crosshair; /* Default cursor when dark mode is off */
+}
+
+body:before {
+    content: '';
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle 12vmax at var(--pointerX) var(--pointerY), rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,0.99) 100%);
+    pointer-events: none;
+    display: none; /* Hide the spotlight by default */
+}
+
+body.dark-mode-active:before {
+    display: block; /* Show the spotlight when dark mode is active */
+}
+
+/* Reapply your custom cursors only when dark mode is NOT active */
+body:not(.dark-mode-active) .calc_screen, 
+body:not(.dark-mode-active) .button, 
+body:not(.dark-mode-active) .button_small, 
+body:not(.dark-mode-active) .button_large, 
+body:not(.dark-mode-active) .functions_container {
+    cursor: pointer; /* or any other cursor you've defined */
+}
+
+/* Your existing cursor definitions for these elements */
+.calc_screen {
+    cursor: text;
+}
+
+.button_large:focus, .button_large:active {
+    cursor: grabbing;
+}
+
+.button {
+    cursor: pointer;
+}
+
+#dark_mode, #randomize_input, #mem_lookup {
+    cursor: grab;
+}
+
+#dark_mode:focus, #randomize_input:focus, #mem_lookup:focus, #dark_mode:active, #randomize_input:active, #mem_lookup:active {
+    cursor: grabbing;
+}
+
+/* Dim or hide interactive elements in dark mode */
+body.dark-mode-active .calc_screen, 
+body.dark-mode-active .calc_buttons .button,
+body.dark-mode-active .operations_container .button_small,
+body.dark-mode-active .button_large,
+body.dark-mode-active .calc_answer {
+    color: rgba(255, 255, 255, 0.5); /* Slightly visible within the flashlight */
+    border-color: rgba(255, 255, 255, 0.5); /* Dim the borders */
+    background-color: rgba(0, 0, 0, 0.5); /* Slightly visible background */
+}
+
+
+/* Optional: hide the calculator completely */
+body.dark-mode-active .calc_body {
+    opacity: 0.04; /* Nearly invisible but slightly visible */
+}
+
+body.dark-mode-active * {
+    cursor: none !important; /* Ensure no custom cursors are visible in dark mode */
 }
 
 .container {
@@ -31,13 +98,16 @@ body {
 .calc_body {
     margin-top: 5vh;
     aspect-ratio: 2 / 3;
-    min-height: 65vh;
+    min-height: 60vh;
     min-width: 400px;
     max-width: 400px;
     border: 1px solid var(--border-color);
     border-radius: 30px;
     padding: 0px 2vw;
     transition: border 300ms, transform 0.5s ease; /* Added transform transition */
+    margin-left: 1vw;
+    margin-right: 1vw;
+    overflow: hidden;
 }
 
 .calc_screen {
@@ -71,10 +141,12 @@ body {
 .calc_buttons {
     display: grid;
     height: 65%;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-items: center;
     gap: 2vh;
     user-select: none;
+    margin: 0px 20px;
 }
 
 .button {
@@ -96,22 +168,25 @@ body {
 }
 
 .operations_container {
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Distribute buttons evenly */
+    align-items: center;
+    grid-column: span 2;
+    grid-row: span 2;
     border: 1px solid var(--border-color);
     border-radius: 30px;
     transition: border 300ms;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    grid-column: span 2;
-    grid-row: span 2;
+    padding: 20px 10px;
+    min-height: 160px;
+    margin: 15px 5px 0px;
+    transform: translate(0, -15px);
 }
 
+
 .button_small {
-    height: 60px;
-    width: 60px;
+    height: 52px;
+    width: 52px;
     border: 1px solid var(--border-color);
     border-radius: 100%;
     transition: border 300ms;
@@ -130,7 +205,7 @@ body {
 
 .button_large {
     grid-column: span 2;
-    margin-right: 25px;
+    grid-row: span 2;
     border: 1px solid var(--border-color);
     border-radius: 30px;
     transition: border 300ms;
@@ -138,8 +213,11 @@ body {
     align-items: center;
     justify-content: center;
     font-size: xx-large;
+    width: 160px;
     color: var(--border-color);
     cursor: grab;
+    height: 80px;
+    transform: translate(0, -5px);
 }
 
 .button_large:hover {
