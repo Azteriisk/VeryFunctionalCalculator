@@ -7,6 +7,8 @@
     --bg-color: #111111;
     --border-color: #7c7c7c;
     --border-color-hover: #d8d8d8;
+    --calc-color:#1d1b1b;
+    --bg-color2: #F17C0F;
 }
 
 body {
@@ -108,6 +110,7 @@ body.dark-mode-active * {
     margin-left: 1vw;
     margin-right: 1vw;
     overflow: hidden;
+    background-color: var(--calc-color);
 }
 
 .calc_screen {
@@ -163,8 +166,11 @@ body.dark-mode-active * {
 }
 
 .button:hover {
-    border: 1px solid var(--border-color-hover);
-    color: var(--text-color);
+    /* border: 1px solid var(--border-color-hover);
+    color: var(--text-color); */
+    border: 1px, solid, var(--bg-color2);
+    color: var(--bg-color2);
+    filter: invert(42%) sepia(96%) saturate(503%) hue-rotate(350deg) brightness(108%) contrast(98%);
 }
 
 .operations_container {
@@ -187,19 +193,20 @@ body.dark-mode-active * {
 .button_small {
     height: 52px;
     width: 52px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--calc-color);
     border-radius: 100%;
     transition: border 300ms;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--border-color);
+    color: var(--bg-color2);
     margin: 5px;
     font-size: xx-large;
 }
 
 .button_small:hover {
-    border: 1px solid var(--border-color-hover);
+    /* border: 1px solid var(--border-color-hover); */
+    border: 1px, solid, var(--bg-color2);
     color: var(--text-color);
 }
 
@@ -218,6 +225,7 @@ body.dark-mode-active * {
     cursor: grab;
     height: 80px;
     transform: translate(0, -5px);
+    background-color: var(--bg-color2);
 }
 
 .button_large:hover {
