@@ -5,6 +5,17 @@ const operationsContainer = document.querySelector('.operations_container');
 const submitButton = document.getElementById('submit');
 const darkModeButton = document.getElementById('dark_mode');
 const randomizeButton = document.getElementById('randomize_input');
+const memLookupButton = document.getElementById("mem_lookup");
+
+// Enable drag-and-drop for the .calc_screen div
+const calcScreen = document.querySelector('.calc_screen');
+
+calcScreen.setAttribute('draggable', true);
+
+calcScreen.addEventListener('dragstart', function(event) {
+    const memoryAddress = event.target.textContent.trim(); // Ensure no extra spaces
+    event.dataTransfer.setData('text/plain', memoryAddress);
+});
 
 // Initialize variables to keep track of the current input, last operation, and last result
 let currentInput = "";
@@ -12,6 +23,7 @@ let lastOperation = "";
 let lastOperand = null;
 let lastResult = null;
 let operationPerformed = false;
+let titleUpdated = false; // Track if the title has been updated
 
 // Function to rotate the calculator when "5318008" is detected
 function checkForEasterEgg() {
@@ -106,7 +118,6 @@ function attachButtonListeners() {
     });
 }
 
-
 // Handler for number button clicks
 function handleButtonClick(event) {
     const value = event.target.textContent;
@@ -131,8 +142,43 @@ function handleOperationClick(event) {
     }
 }
 
+function performMemoryLookup(memoryAddress) {
+    memoryAddress = memoryAddress.trim(); // Ensure no extra spaces
+    showLoadingThrobber();
+
+    setTimeout(() => {
+        let resultMessage;
+
+        if (window.calculatorMemory && window.calculatorMemory[memoryAddress]) {
+            resultMessage = "Value at " + memoryAddress + " is: " + window.calculatorMemory[memoryAddress];
+        } else {
+            resultMessage = "Invalid memory address or no value stored.";
+        }
+
+        alert(resultMessage);
+        hideLoadingThrobber();
+    }, 800);
+};
+
 // Attach initial event listeners
 attachButtonListeners();
+
+document.getElementById("mem_lookup").addEventListener("click", function() {
+    let address = prompt("Enter the memory address to lookup:");
+    if (address) {
+        performMemoryLookup(address);
+    }
+});
+
+memLookupButton.addEventListener('dragover', function(event) {
+    event.preventDefault();
+});
+
+memLookupButton.addEventListener('drop', function(event) {
+    event.preventDefault();
+    const memoryAddress = event.dataTransfer.getData('text/plain');
+    performMemoryLookup(memoryAddress);
+});
 
 // Add event listener to the randomize button
 randomizeButton.addEventListener('click', shuffleButtons);
@@ -157,14 +203,55 @@ operationsContainer.querySelectorAll('.button_small').forEach(button => {
     });
 });
 
-// Add event listener to the submit button
-submitButton.addEventListener('click', () => {
-    if (currentInput && !operationPerformed) {
-        calculate(); // Perform calculation with current input
-    } else if (lastResult !== null && lastOperation) {
-        calculate(true); // Repeats the last operation if no new input is given
+document.getElementById("submit").addEventListener("click", function() {
+    const calcScreen = document.querySelector('.calc_answer');
+    let calcExpression = calcScreen.textContent;
+
+    try {
+        let calcAnswer = eval(calcExpression.replace('×', '*').replace('÷', '/'));
+        let pseudoMemoryAddress = generateMemoryAddress(calcAnswer);
+
+        calcScreen.textContent = pseudoMemoryAddress;
+        calcScreen.classList.add('memory-address');
+
+        // Change #mem_lookup border and SVG color to white
+        const memLookupButton = document.getElementById("mem_lookup");
+        memLookupButton.style.borderColor = '#fff';
+        memLookupButton.querySelector('img').style.filter = 'invert(100%)';
+
+        // Update the title if it hasn't been updated yet
+        if (!titleUpdated) {
+            const functionalSpan = document.querySelector('.functional');
+
+            // Add "Dys" element dynamically
+            const dysSpan = document.createElement('span');
+            dysSpan.classList.add('dys');
+            dysSpan.textContent = 'Dys';
+            document.querySelector('.title').insertBefore(dysSpan, functionalSpan);
+
+            // Trigger the spreading and descent simultaneously
+            functionalSpan.classList.add('spread');
+            setTimeout(() => {
+                dysSpan.classList.add('reveal-dys');
+            }, 10); // Small delay to ensure the transition occurs
+
+            titleUpdated = true; // Prevent further updates
+        }
+
+        // Store the answer in memory for lookup
+        window.calculatorMemory = window.calculatorMemory || {};
+        window.calculatorMemory[pseudoMemoryAddress] = calcAnswer;
+
+    } catch (error) {
+        calcScreen.textContent = "Error";
+        calcScreen.classList.remove('memory-address');
     }
 });
+
+function generateMemoryAddress(value) {
+    return "0x" + (Math.random() * 0xFFFFFF | 0).toString(16).padStart(6, '0');
+}
+
 
 // Toggle dark mode on button click
 darkModeButton.addEventListener('click', () => {
@@ -181,6 +268,19 @@ document.body.addEventListener('mousemove', (e) => {
         document.documentElement.style.setProperty('--pointerY', pointerY);
     }
 });
+
+function showLoadingThrobber() {
+    const throbber = document.getElementById("loading-throbber");
+    throbber.classList.remove("hidden"); // Remove the hidden class
+    throbber.style.display = 'flex';  // Ensure the throbber is shown
+}
+
+function hideLoadingThrobber() {
+    const throbber = document.getElementById("loading-throbber");
+    throbber.style.display = 'none';  // Hide the throbber
+    throbber.classList.add("hidden"); // Reapply the hidden class
+}
+
 
 // Optional: Clear the display if we add a "Clear" button
 // clearButton.addEventListener('click', () => {

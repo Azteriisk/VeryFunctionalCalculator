@@ -11,8 +11,10 @@
     <!--Container holds the background color and should be defined as the visible area ie viewport container-->
     <div class="container">
 
-        <h1 class="title">A Very Functional Calculator</h1>
-
+        <h1 class="title">
+            A Very <span class="functional">Functional</span> Calculator
+        </h1>                    
+        
         <!--START CALCULATOR-->
         <div class="calc_body">
             <div class="calc_screen">
@@ -49,8 +51,10 @@
             <!-- mem_lookup will need to trigger popup to make it easy to loopup values from a memory address -->
             <div class="button" id="mem_lookup"><img src="img/memory.svg" /></div>
         </div>
-
     </div>
     <!--End of Viewport Container-->
+    <div id="loading-throbber" class="hidden">
+        <div class="throbber"></div>
+    </div>    
 </body>
 </html>
