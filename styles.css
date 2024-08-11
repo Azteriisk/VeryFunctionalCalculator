@@ -169,13 +169,14 @@ body.dark-mode-active * {
 
 .calc_buttons {
     display: grid;
-    height:0;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-items: center;
-    gap: 20px 10px;
+    align-items: center; /* Center items vertically */
+    gap: 0px; /* Define consistent gap */
     user-select: none;
     margin: 25px 20px;
+    box-sizing: border-box;
 }
 
 .button {
@@ -183,7 +184,6 @@ body.dark-mode-active * {
     width: 60px;
     border: 1px solid var(--border-color);
     border-radius: 15px;
-    transition: border 300ms;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -191,48 +191,48 @@ body.dark-mode-active * {
     font-weight: bold;
 }
 
-.button:hover {
-    /* border: 1px solid var(--border-color-hover);
-    color: var(--text-color); */
-    border: 1px, solid, var(--bg-color2);
-    color: var(--bg-color2);
-    filter: invert(42%) sepia(96%) saturate(503%) hue-rotate(350deg) brightness(108%) contrast(98%);
+/* Common hover effects for all buttons */
+.button, .button_small, .button_large {
+    transition: border 300ms ease, color 300ms ease, filter 300ms ease; /* Ensure smooth transitions */
 }
 
 .operations_container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Distribute buttons evenly */
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal-width columns */
+    grid-template-rows: repeat(2, 1fr); /* Two equal-height rows */
+    gap: 0px; /* Control the space between buttons */
+    justify-items: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    width: calc(2 * 60px + 30px); /* Adjust width to match the width of two buttons + gap */
     grid-column: span 2;
     grid-row: span 2;
     border: 1px solid var(--border-color);
-    border-radius: 30px;
+    border-radius: 15px;
     transition: border 300ms;
-    min-height: 140px;
-    padding: .5vh .5vw;
-    margin: 15px 5px 0px;
-    transform: translate(0, -15px);
+    min-height: 150px;
+    margin: 10px 0px; /* Center horizontally */
+    box-sizing: border-box;
 }
 
 
+
 .button_small {
-    height: 50px;
-    width: 50px;
+    height: 45px;
+    width: 45px;
     border: 1px solid var(--calc-color);
-    border-radius: 100%;
-    transition: border 300ms;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--bg-color2);
-    margin: 1vh .5vw;
+    margin: 0px 5px; /* Ensure equal margin on all sides */
     font-size: xx-large;
-    gap: 0;
+    box-sizing: border-box; /* Include padding in width/height calculations */
 }
 
-.button_small:hover {
-    /* border: 1px solid var(--border-color-hover); */
+
+
+.button_small:hover, .button:hover {
     border: 1px, solid, var(--bg-color2);
     color: var(--text-color);
 }
@@ -241,8 +241,7 @@ body.dark-mode-active * {
     grid-column: span 2;
     grid-row: span 2;
     border: 1px solid var(--border-color);
-    border-radius: 30px;
-    transition: border 300ms;
+    border-radius: 10%/50%; /*Playing with weird border radius*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -251,8 +250,12 @@ body.dark-mode-active * {
     color: var(--border-color);
     cursor: grab;
     height: 70px;
-    transform: translate(0, -15px);
+    margin-top: 0;
+    margin-bottom: 0;
     background-color: var(--bg-color2);
+    box-sizing: border-box;
+    position: relative;
+    top: -4px; /* Fine-tuned to bring it up slightly */
 }
 
 .button_large:hover {
@@ -353,6 +356,36 @@ body.dark-mode-active * {
     width: 50px;
     height: 50px;
     animation: spin 1s linear infinite;
+}
+
+#dark_mode img,
+#randomize_input img,
+#mem_lookup img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
+    transition: filter 300ms;
+}
+
+#dark_mode:hover img,
+#randomize_input:hover img,
+#mem_lookup:hover img {
+    filter: invert(42%) sepia(96%) saturate(503%) hue-rotate(350deg) brightness(108%) contrast(98%); /* Orange filter */
+}
+
+/* Specific hover state for Firefox with -moz prefix */
+@-moz-document url-prefix() {
+    .button_small:hover, .button:hover {
+        border: 1px solid var(--bg-color2); /* Reapply to ensure Firefox picks it up */
+        color: var(--border-color-hover);
+    }
+    .button_large:hover {
+        border: 1px solid var(--border-color-hover); /* Reapply to ensure Firefox picks it up */
+        color: var(--border-color-hover);
+    }
 }
 
 @keyframes spin {
