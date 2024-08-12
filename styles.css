@@ -17,6 +17,7 @@ body {
     cursor: crosshair; /* Default cursor when dark mode is off */
 }
 
+/* Flashlight Controls */
 body:before {
     content: '';
     position: fixed;
@@ -27,52 +28,14 @@ body:before {
     display: none; /* Hide the spotlight by default */
 }
 
-body.dark-mode-active:before {
-    display: block; /* Show the spotlight when dark mode is active */
-}
-
-/* Reapply your custom cursors only when dark mode is NOT active */
-body:not(.dark-mode-active) .calc_screen, 
-body:not(.dark-mode-active) .button, 
-body:not(.dark-mode-active) .button_small, 
-body:not(.dark-mode-active) .button_large, 
-body:not(.dark-mode-active) .functions_container {
-    cursor: pointer; /* or any other cursor you've defined */
-}
-
-/* Your existing cursor definitions for these elements */
-.calc_screen {
-    cursor: text;
-}
-
-.button_large:focus, .button_large:active {
-    cursor: pointer;
-}
-
-.button {
-    cursor: pointer;
-}
-
-/* Dim or hide interactive elements in dark mode */
-body.dark-mode-active .calc_screen, 
-body.dark-mode-active .calc_buttons .button,
-body.dark-mode-active .operations_container .button_small,
-body.dark-mode-active .button_large,
-body.dark-mode-active .calc_answer {
-    color: rgba(255, 255, 255, 0.5); /* Slightly visible within the flashlight */
-    border-color: rgba(255, 255, 255, 0.5); /* Dim the borders */
-    background-color: rgba(0, 0, 0, 0.5); /* Slightly visible background */
-}
-
-
-/* Optional: hide the calculator completely */
-body.dark-mode-active .calc_body {
-    opacity: 0.04; /* Nearly invisible but slightly visible */
-}
-
-body.dark-mode-active * {
-    cursor: none !important; /* Ensure no custom cursors are visible in dark mode */
-}
+/* Reapply custom cursors only when dark mode is NOT active */
+/*body:not(.dark-mode-active) .calc_screen, */
+/*body:not(.dark-mode-active) .button, */
+/*body:not(.dark-mode-active) .button_small, */
+/*body:not(.dark-mode-active) .button_large, */
+/*body:not(.dark-mode-active) .functions_container {*/
+/*    cursor: pointer; /*/
+/*}*/
 
 .container {
     width: 100%;
@@ -85,44 +48,6 @@ body.dark-mode-active * {
     background-color: var(--bg-color);
 }
 
-.title {
-    font-size: 3em;
-    color: var(--text-color);
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.functional {
-    display: inline-block;
-    transition: transform 1s ease-in-out, margin-left 1s ease-in-out; /* Transition for spreading */
-    margin-left: 0; /* Initial margin to keep "Functional" close to "A Very" */
-}
-
-.dys {
-    color: var(--bg-color2); /* Orange color */
-    position: absolute;
-    top: -100%; /* Start above the title */
-    left: 0; /* Start from 0 and adjust dynamically */
-    transform: translateX(-100%); /* Adjust the initial position to be off-screen */
-    transition: top 1s ease-in-out, transform 1s ease-in-out;
-    visibility: hidden; /* Initially hidden */
-}
-
-.reveal-dys {
-    visibility: visible;
-    top: 0; /* Slide down to its position */
-    transform: translateX(3.5em); /* Adjust this value for precise alignment */
-}
-
-.spread {
-    margin-left: 2em; /* Slightly reduce the space between "A Very" and "Functional" */
-}
-
-.hidden {
-    visibility: hidden; /* Initially hidden without taking up space */
-}
-
 .calc_body {
     margin: 1vh 5vh;
     aspect-ratio: 2 / 3;
@@ -132,7 +57,7 @@ body.dark-mode-active * {
     border: 1px solid var(--border-color);
     border-radius: 30px;
     padding: 10px 2vw;
-    transition: border 300ms, transform 0.5s ease; /* Added transform transition */
+    transition: border 300ms, transform 0.5s ease;
     margin-left: 1vw;
     margin-right: 1vw;
     overflow: hidden;
@@ -140,31 +65,38 @@ body.dark-mode-active * {
 }
 
 .calc_screen {
-    margin: 10% 0;
     min-height: 10vh;
+    margin: 20px 20px 20px 20px;
+    padding: 0 30px;
     border: 1px solid var(--border-color);
     border-radius: 10px;
     transition: border 300ms;
-    cursor: grab !important;
+    font-size: xx-large;
+    font-style: normal;
+    font-family: 'DS-Digital', 'Courier New', Courier, monospace;
+    color: var(--text-color);
+    text-align: right;
+    letter-spacing: 5px; /* Spacing to mimic segment gaps */
+    text-shadow: 1px 1px 2px #000;
+    cursor: grab;
     user-select: text;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 20px 20px 20px 20px;
 }
 
 .calc_screen:hover {
     border: 1px solid var(--border-color-hover);
 }
 
-.calc_answer {
-    padding: 0 30px;
-    font-size: xx-large;
-    font-family: 'DS-Digital', 'Courier New', Courier, monospace;
-    color: var(--text-color);
-    text-align: right;
-    letter-spacing: 5px; /* Spacing to mimic segment gaps */
-    text-shadow: 1px 1px 2px #000;
+.calc_screen:active {
+    opacity: 0.6;
+    cursor: grabbing;
+}
+
+.memory-address {
+    color: var(--bg-color2); /* Distinct color for memory address */
+    font-style: italic;
 }
 
 .calc_buttons {
@@ -172,7 +104,7 @@ body.dark-mode-active * {
     grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-items: center;
-    align-items: center; /* Center items vertically */
+    align-items: center;
     gap: 0px; /* Define consistent gap */
     user-select: none;
     margin: 25px 20px;
@@ -191,30 +123,22 @@ body.dark-mode-active * {
     font-weight: bold;
 }
 
-/* Common hover effects for all buttons */
-.button, .button_small, .button_large {
-    transition: border 300ms ease, color 300ms ease, filter 300ms ease; /* Ensure smooth transitions */
-}
-
 .operations_container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two equal-width columns */
-    grid-template-rows: repeat(2, 1fr); /* Two equal-height rows */
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 0px; /* Control the space between buttons */
-    justify-items: center; /* Center items horizontally */
-    align-items: center; /* Center items vertically */
+    justify-items: center;
+    align-items: center;
     width: calc(2 * 60px + 30px); /* Adjust width to match the width of two buttons + gap */
     grid-column: span 2;
     grid-row: span 2;
     border: 1px solid var(--border-color);
     border-radius: 15px;
-    transition: border 300ms;
     min-height: 150px;
-    margin: 10px 0px; /* Center horizontally */
+    margin: 10px 0px;
     box-sizing: border-box;
 }
-
-
 
 .button_small {
     height: 45px;
@@ -230,8 +154,6 @@ body.dark-mode-active * {
     box-sizing: border-box; /* Include padding in width/height calculations */
 }
 
-
-
 .button_small:hover, .button:hover {
     border: 1px, solid, var(--bg-color2);
     color: var(--text-color);
@@ -241,14 +163,14 @@ body.dark-mode-active * {
     grid-column: span 2;
     grid-row: span 2;
     border: 1px solid var(--border-color);
-    border-radius: 10%/50%; /*Playing with weird border radius*/
+    border-radius: 10%/50%; /* Playing with weird border radius */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: xx-large;
     width: 160px;
     color: var(--border-color);
-    cursor: grab;
+    cursor: pointer;
     height: 70px;
     margin-top: 0;
     margin-bottom: 0;
@@ -263,13 +185,13 @@ body.dark-mode-active * {
     color: var(--text-color);
 }
 
-.button_large:focus, .button_large:active {
-    cursor: grabbing;
+.button, .button_small, .button_large {
+    transition: border 300ms ease, color 300ms ease, filter 300ms ease; /* Ensure smooth transitions */
 }
 
 .functions_container {
     display: flex;
-    margin: auto;
+    margin: 5px auto;
 }
 
 .functions_container .button {
@@ -277,10 +199,75 @@ body.dark-mode-active * {
     min-width: 100px;
 }
 
-.calc_answer.memory-address {
-    color: #F17C0F; /* Distinct color for memory address */
-    font-size: xx-large;
-    font-style: italic;
+.title {
+    font-size: 3em;
+    color: var(--text-color);
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.dys {
+    color: var(--bg-color2);
+    position: absolute;
+    top: -100%; /* Start above the title */
+    left: 0%; /* Start from 0 and adjust dynamically */
+    transform: translateX(-100%); /* Adjust the initial position to be off-screen */
+    transition: top 1s ease-in-out, transform 1s ease-in-out;
+    visibility: hidden; /* Initially hidden */
+}
+
+.reveal-dys {
+    visibility: visible;
+    top: 0; /* Slide down to its position */
+    transform: translateX(3.5em); /* Adjust this value for precise alignment */
+}
+
+.functional {
+    display: inline-block;
+    transition: transform 1s ease-in-out, margin-left 1s ease-in-out; /* Transition for spreading */
+    margin-left: 0; /* Initial margin to keep "Functional" close to "A Very" */
+}
+
+.spread {
+    margin-left: 2em; /* Slightly reduce the space between "A Very" and "Functional" */
+}
+
+.hidden {
+    visibility: hidden; /* Initially hidden without taking up space */
+}
+
+/* Show the spotlight when dark mode is active */
+body.dark-mode-active:before {
+    display: block;
+}
+
+/* Dim or hide interactive elements in dark mode */
+body.dark-mode-active .calc_screen,
+body.dark-mode-active .calc_buttons .button,
+body.dark-mode-active .operations_container .button_small,
+body.dark-mode-active .button_large,
+body.dark-mode-active .calc_answer {
+    color: rgba(255, 255, 255, 1); /* Alpha channel changes visibility  within the flashlight */
+    border-color: rgba(255, 255, 255, 1); /* Alpha dims the borders */
+    background-color: rgba(0, 0, 0, 1); /* Alpha changes bg visibility */
+}
+
+body.dark-mode-active .calc_body {
+    opacity: 0.03; /* Nearly invisible but slightly visible */
+}
+
+body.dark-mode-active * {
+    cursor: none !important; /* Ensure no custom cursors are visible in dark mode */
+}
+
+.throbber {
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
 }
 
 #dark_mode, #randomize_input, #mem_lookup {
@@ -289,50 +276,6 @@ body.dark-mode-active * {
 
 #dark_mode:focus, #randomize_input:focus, #mem_lookup:focus, #dark_mode:active, #randomize_input:active, #mem_lookup:active {
     cursor: pointer;
-}
-
-#dark_mode img {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    margin-top: 5px;
-    filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
-    transition: filter 300ms;
-}
-
-#dark_mode:hover img {
-    filter: invert(85%) sepia(70%) saturate(300%) hue-rotate(150deg) brightness(120%) contrast(100%);
-}
-
-#randomize_input img {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
-    transition: filter 300ms;
-}
-
-#randomize_input:hover img {
-    filter: invert(85%) sepia(70%) saturate(300%) hue-rotate(150deg) brightness(120%) contrast(100%);
-}
-
-#mem_lookup img {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    margin-top: 5px;
-    filter: invert(52%) sepia(2%) saturate(0%) hue-rotate(207deg) brightness(93%) contrast(95%);
-    transition: filter 300ms;
-}
-
-#mem_lookup:hover img {
-    filter: invert(85%) sepia(70%) saturate(300%) hue-rotate(150deg) brightness(120%) contrast(100%);
 }
 
 #loading-throbber {
@@ -347,15 +290,6 @@ body.dark-mode-active * {
     display: none; /* Ensure it's hidden by default */
     justify-content: center;
     align-items: center;
-}
-
-.throbber {
-    border: 8px solid rgba(255, 255, 255, 0.3);
-    border-top: 8px solid #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
 }
 
 #dark_mode img,
