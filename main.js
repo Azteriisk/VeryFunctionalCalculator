@@ -1,16 +1,17 @@
 //-------REFERENCE ELEMENTS-------//
+const calcBody = document.querySelector('.calc_body');
 const calcAnswer = document.querySelector('.calc_answer');
 const submitButton = document.getElementById('submit');
 const darkModeButton = document.getElementById('dark_mode');
 const randomizeButton = document.getElementById('randomize_input');
 const memLookupButton = document.getElementById('mem_lookup');
-const calcScreen = document.querySelector('.calc_screen');
 const buttonsContainer = document.querySelector('.calc_buttons');
 const buttons = Array.from(buttonsContainer.children);
 const numberButtons = document.querySelectorAll('.button_number');
 const operationButtons = document.querySelectorAll('.button_operation');
 const operationsContainer = document.querySelector('.operations_container');
-//const clearButton = document.getElementById('clear_button'); //TODO: make a button with id=clear_button to implement function
+const dragHandle = document.querySelector('.drag_handle');
+//const clearButton = document.getElementById('clear_button'); // Did shake to clear instead of a button
 
 //-------INITIALIZE DEFAULT VARIABLES-------//
 let currentInput = "";
@@ -19,18 +20,25 @@ let lastOperation = "";
 let lastResult = null;
 let operationPerformed = false; // Track if an operation has already been performed
 let titleUpdated = false; // Track if the title has been updated
+let isDragging = false;
+let startX, startY, startTime, shakeTimeout;
+let moveDistance = 0;
+let isShaking = false;
+let shakeThresh = 300;
 
 //-------START FUNCTION DEFINITONS-------//
 
 // Function to attach event listeners to buttons
 function attachButtonListeners() {
     // Re-attach event listeners to number buttons
+    const numberButtons = document.querySelectorAll('.button_number');
     numberButtons.forEach(button => {
         button.removeEventListener('click', handleButtonClick); // Ensures no duplicate listeners
         button.addEventListener('click', handleButtonClick);
     });
 
     // Re-attach event listeners to operation buttons
+    const operationButtons = document.querySelectorAll('.button_operation');
     operationButtons.forEach(button => {
         button.removeEventListener('click', handleOperationClick); // Ensures no duplicate listeners
         button.addEventListener('click', handleOperationClick);
@@ -45,18 +53,20 @@ function attachButtonListeners() {
     darkModeButton.addEventListener('click', darkerModeToggle);
 
     // Track clicks on randomize button / randomize_input
+    randomizeButton.removeEventListener('click', shuffleButtons);
     randomizeButton.addEventListener('click', shuffleButtons);
 
     // Memory Lookup button prompt
+    memLookupButton.removeEventListener("click", clickMemoryLookup);
     memLookupButton.addEventListener("click", clickMemoryLookup);
 
 };
 
 // Drag & Drop Memory Lookup Functionality
 function enableDragAndDrop() {
-    calcScreen.addEventListener('dragstart', (event) => {
-    const memoryAddress = event.target.textContent.trim(); // Ensure no extra spaces
-    event.dataTransfer.setData('text/plain', memoryAddress);
+    calcAnswer.addEventListener('dragstart', (event) => {
+        const memoryAddress = event.target.textContent.trim(); // Ensure no extra spaces
+        event.dataTransfer.setData('text/plain', memoryAddress);
     });
 
     memLookupButton.addEventListener('dragover', (event) => {
@@ -81,7 +91,7 @@ function trackMouseMovement() {
             document.documentElement.style.setProperty('--pointerY', pointerY);
         }
     });
-}
+};
 
 // Handler for number button clicks
 function handleButtonClick(event) {
@@ -112,35 +122,47 @@ function handleOperationClick(event) {
 };
 
 // Function to update the display
-function updateDisplay(value) {
+function updateDisplay(value = "") {
+    // Initialize currentInput if it's undefined or null
+    if (currentInput === undefined || currentInput === null) {
+        currentInput = "";
+    }
+
     if (operationPerformed) {
         currentInput = ""; // Clear input if an operation was just performed
         operationPerformed = false; // Reset operationPerformed flag
     }
+
+    // Append the new value to currentInput
     currentInput += value;
-    calcAnswer.textContent = currentInput;
-    
+
+    // Update the display with the currentInput or default to "0" if it's empty
+    calcAnswer.textContent = currentInput || "0";
+
     // Check for the easter egg
     checkForEasterEgg();
 };
 
-//Checks and calculations performed on clicking '=' button
+// Checks and calculations performed on clicking '=' button
 function equalsButton() {
     let calcExpression = calcAnswer.textContent;
 
     try {
-        let calcAnswer = eval(calcExpression.replace('×', '*').replace('÷', '/'));
-        let pseudoMemoryAddress = generateMemoryAddress(calcAnswer);
+        // Evaluate the expression in calcAnswer
+        let result = eval(calcExpression.replace('×', '*').replace('÷', '/'));
+        let pseudoMemoryAddress = generateMemoryAddress(result);
 
-        calcScreen.textContent = pseudoMemoryAddress;
-        calcScreen.classList.add('memory-address');
+        // Update calcAnswer with both the result and memory address
+        // calcAnswer.textContent = result; // Shows the real result
+        calcAnswer.classList.add('memory-address');
+        calcAnswer.textContent = `${pseudoMemoryAddress}`; // Append the memory address
 
         // Change #mem_lookup styling after generating memory address calculation
         const memLookupButton = document.getElementById("mem_lookup");
         memLookupButton.style.borderColor = '#fff';
         memLookupButton.querySelector('img').style.filter = 'invert(100%)';
 
-        // Starts the .title animation on first calculation.
+        // Start the .title animation on first calculation.
         if (!titleUpdated) {
             const functionalSpan = document.querySelector('.functional');
 
@@ -161,11 +183,12 @@ function equalsButton() {
 
         // Store the answer in memory for lookup
         window.calculatorMemory = window.calculatorMemory || {};
-        window.calculatorMemory[pseudoMemoryAddress] = calcAnswer;
+        window.calculatorMemory[pseudoMemoryAddress] = result;
 
     } catch (error) {
-        calcScreen.textContent = "Error";
-        calcScreen.classList.remove('memory-address');
+        // Handle errors during the calculation
+        calcAnswer.textContent = "Error";
+        calcAnswer.classList.remove('memory-address');
     }
 };
 
@@ -179,7 +202,7 @@ function calculate(repeat = false) {
 
         // Evaluate the current input string
         const result = eval(currentInput.replace(/×/g, '*').replace(/÷/g, '/'));
-        calcAnswer.textContent = result;
+        calcAnswer.textContent = result;  // Update calcAnswer with the result
 
         // Save the current state for future repeats
         lastResult = result; 
@@ -193,7 +216,7 @@ function calculate(repeat = false) {
         checkForEasterEgg();
 
     } catch (error) {
-        calcAnswer.textContent = "Error";
+        calcAnswer.textContent = "Error"; // Show error in calcAnswer
         currentInput = "";
         lastOperation = "";
         lastOperand = null;
@@ -203,7 +226,6 @@ function calculate(repeat = false) {
 
 // Function to rotate the calculator when "5318008" is detected / boobies func
 function checkForEasterEgg() {
-    const calcBody = document.querySelector('.calc_body');
     const easterEggNumber = "5318008";
     
     if (calcAnswer.textContent.includes(easterEggNumber)) {
@@ -216,24 +238,24 @@ function checkForEasterEgg() {
 // Toggle for dark mode
 function darkerModeToggle() {
     document.body.classList.toggle('dark-mode-active');
-}
+};
 
 // Function to shuffle only number buttons
 function shuffleButtons() {
     // Shuffle the number buttons array
-    for (let i = numberButtons.length - 1; i > 0; i--) {
+    for (let i = buttons.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [numberButtons[i], numberButtons[j]] = [numberButtons[j], numberButtons[i]];
+        [buttons[i], buttons[j]] = [buttons[j], buttons[i]];
     }
 
     // Re-append the shuffled number buttons back to the container
-    numberButtons.forEach(button => buttonsContainer.appendChild(button));
+    buttons.forEach(button => buttonsContainer.appendChild(button));
 
     // Re-attach event listeners after shuffling
     attachButtonListeners();
 };
 
-// Generate a fake memory address with given value
+// Generate a fake memory address
 function generateMemoryAddress() {
     return "0x" + (Math.random() * 0xFFFFFF | 0).toString(16).padStart(6, '0');
 };
@@ -243,7 +265,7 @@ function clickMemoryLookup() {
     if (address) {
     performMemoryLookup(address)
     }
-}
+};
 
 // Format memory address input string and check against stored and handle calls to "throbber"
 function performMemoryLookup(memoryAddress) {
@@ -264,6 +286,96 @@ function performMemoryLookup(memoryAddress) {
     }, 800);
 };
 
+// Hide all the cursors (only used for calc shake rn)
+function hideCursors() {
+    document.body.classList.add('hide-cursor');
+    calcAnswer.classList.add('hide-cursor');
+    submitButton.classList.add('hide-cursor');
+    dragHandle.classList.add('hide-cursor');
+    darkModeButton.classList.add('hide-cursor');
+    randomizeButton.classList.add('hide-cursor');
+    memLookupButton.classList.add('hide-cursor');
+};
+
+function restoreCursors() {
+    document.body.classList.remove('hide-cursor');
+    calcAnswer.classList.remove('hide-cursor');
+    submitButton.classList.remove('hide-cursor');
+    dragHandle.classList.remove('hide-cursor');
+    darkModeButton.classList.remove('hide-cursor');
+    randomizeButton.classList.remove('hide-cursor');
+    memLookupButton.classList.remove('hide-cursor');
+};
+
+// Handles the calculator grab and shake functions
+function calcBodyHandler() {
+    function startDrag(e) {
+        e.preventDefault();
+        if (isShaking) return;  // Prevent dragging if currently shaking
+        isDragging = true;
+        const event = e.type === 'touchstart' ? e.touches[0] : e;
+        startX = event.clientX;
+        startY = event.clientY;
+        startTime = Date.now();
+        moveDistance = 0;
+        calcBody.style.transition = 'none'; // Disable transition while dragging
+        hideCursors();    
+    };
+
+    function onDrag(e) {
+        if (!isDragging || isShaking) return;
+        e.preventDefault();
+        const event = e.type === 'touchmove' ? e.touches[0] : e;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        moveDistance = Math.sqrt(dx * dx + dy * dy); // Calculate the distance
+
+        calcBody.style.transform = `translate(${dx}px, ${dy}px)`;
+
+        if (moveDistance > shakeThresh && !shakeTimeout) {
+            isShaking = true;
+            shakeTimeout = setTimeout(() => {
+                clearFunc(); // Call clearFunc once after shaking
+                shakeTimeout = null;
+            }, 1500);
+        }
+    };
+
+    function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        calcBody.style.transition = 'transform 0.5s ease'; // Re-enable transition
+        calcBody.style.transform = 'translate(0, 0)'; // Reset position
+        restoreCursors();
+
+        if (!isShaking) {
+            clearTimeout(shakeTimeout); // Clear the shake timeout if not shaking
+            shakeTimeout = null;
+        }
+
+        if (isShaking) {
+            // Allow for grabbing and shaking again after the first shake
+            setTimeout(() => {
+                isShaking = false; // Reset shaking after the operation is complete
+            }, 500);
+        }
+    };
+
+    // Mouse events
+    dragHandle.removeEventListener('mousedown', startDrag);
+    dragHandle.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', endDrag);
+
+    // Touch events
+    dragHandle.removeEventListener('touchstart', startDrag);
+    dragHandle.addEventListener('touchstart', startDrag);
+    document.addEventListener('touchmove', onDrag);
+    document.addEventListener('touchend', endDrag);
+
+    dragHandle.addEventListener('dragstart', (e) => e.preventDefault());
+};
+
 function showLoadingThrobber() {
     const throbber = document.getElementById("loading-throbber");
     throbber.classList.remove("hidden"); // Remove the hidden class
@@ -278,12 +390,23 @@ function hideLoadingThrobber() {
 
 // Clears calculator text and resets calculation-impacting variables.
 function clearFunc() {
-    currentInput = "";
-    calcScreen.textContent = "";
+    console.log('clearFunc called');
     operationPerformed = false;
     lastOperand = null;
     lastOperation = "";
     lastResult = null;
+    currentInput = "";
+    calcAnswer.textContent = ""; // Clear the calculation display
+    calcAnswer.classList.remove('memory-address'); // Remove memory address styling
+    console.log('calcAnswer.textContent after clearing:', calcAnswer.textContent);
+    restoreCursors(); // Restore the cursors in case they are hidden
+};
+
+function refreshUI() {
+    attachButtonListeners();
+    enableDragAndDrop();
+    trackMouseMovement();
+    calcBodyHandler();
 };
 
 // Clears generated memory address storage (Not implemented)
@@ -296,7 +419,4 @@ function clearFunc() {
 //-------END FUNCTION DEFINITONS-------//
 
 //-------START SEQUENTIAL EXECUTION STEPS-------//
-
-attachButtonListeners();
-enableDragAndDrop();
-trackMouseMovement();
+refreshUI();

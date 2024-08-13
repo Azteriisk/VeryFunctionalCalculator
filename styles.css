@@ -7,7 +7,7 @@
     --bg-color: #111111;
     --border-color: #7c7c7c;
     --border-color-hover: #d8d8d8;
-    --calc-color:#1d1b1b;
+    --calc-color: #1d1b1b;
     --bg-color2: #F17C0F;
 }
 
@@ -28,15 +28,6 @@ body:before {
     display: none; /* Hide the spotlight by default */
 }
 
-/* Reapply custom cursors only when dark mode is NOT active */
-/*body:not(.dark-mode-active) .calc_screen, */
-/*body:not(.dark-mode-active) .button, */
-/*body:not(.dark-mode-active) .button_small, */
-/*body:not(.dark-mode-active) .button_large, */
-/*body:not(.dark-mode-active) .functions_container {*/
-/*    cursor: pointer; /*/
-/*}*/
-
 .container {
     width: 100%;
     min-height: 100vh;
@@ -49,6 +40,7 @@ body:before {
 }
 
 .calc_body {
+    position: relative;
     margin: 1vh 5vh;
     aspect-ratio: 2 / 3;
     min-height: 60vh;
@@ -64,15 +56,14 @@ body:before {
     background-color: var(--calc-color);
 }
 
-.calc_screen {
+.calc_answer {
     min-height: 10vh;
-    margin: 20px 20px 20px 20px;
+    margin: 20px;
     padding: 0 30px;
     border: 1px solid var(--border-color);
     border-radius: 10px;
     transition: border 300ms;
     font-size: xx-large;
-    font-style: normal;
     font-family: 'DS-Digital', 'Courier New', Courier, monospace;
     color: var(--text-color);
     text-align: right;
@@ -85,11 +76,11 @@ body:before {
     align-items: center;
 }
 
-.calc_screen:hover {
+.calc_answer:hover {
     border: 1px solid var(--border-color-hover);
 }
 
-.calc_screen:active {
+.calc_answer:active {
     opacity: 0.6;
     cursor: grabbing;
 }
@@ -154,8 +145,9 @@ body:before {
     box-sizing: border-box; /* Include padding in width/height calculations */
 }
 
-.button_small:hover, .button:hover {
-    border: 1px, solid, var(--bg-color2);
+.button_small:hover,
+.button:hover {
+    border: 1px solid var(--bg-color2); /* Fixed the border declaration */
     color: var(--text-color);
 }
 
@@ -185,7 +177,10 @@ body:before {
     color: var(--text-color);
 }
 
-.button, .button_small, .button_large {
+.button,
+.button_small,
+.button_large {
+    user-select: none;
     transition: border 300ms ease, color 300ms ease, filter 300ms ease; /* Ensure smooth transitions */
 }
 
@@ -233,8 +228,35 @@ body:before {
     margin-left: 2em; /* Slightly reduce the space between "A Very" and "Functional" */
 }
 
+.drag_handle {
+    position: absolute; /* Position relative to .calc_body */
+    bottom: 20px; /* Position 20px from the bottom */
+    right: 20px; /* Position 20px from the right */
+    width: 40px;
+    height: 40px;
+    cursor: grab;
+    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    touch-action: none;
+    user-select: none;
+    filter: opacity(0.4);
+}
+
+.drag_handle:hover {
+    filter: opacity(0.8);
+}
+
+.drag_handle:active {
+    cursor: none;
+    transform: rotate(-10deg) scale(1.1);
+    filter: opacity(0.8);
+}
+
 .hidden {
     visibility: hidden; /* Initially hidden without taking up space */
+}
+
+.hide-cursor {
+    cursor: none !important;
 }
 
 /* Show the spotlight when dark mode is active */
@@ -243,12 +265,11 @@ body.dark-mode-active:before {
 }
 
 /* Dim or hide interactive elements in dark mode */
-body.dark-mode-active .calc_screen,
+body.dark-mode-active .calc_answer,
 body.dark-mode-active .calc_buttons .button,
 body.dark-mode-active .operations_container .button_small,
-body.dark-mode-active .button_large,
-body.dark-mode-active .calc_answer {
-    color: rgba(255, 255, 255, 1); /* Alpha channel changes visibility  within the flashlight */
+body.dark-mode-active .button_large {
+    color: rgba(255, 255, 255, 1); /* Alpha channel changes visibility within the flashlight */
     border-color: rgba(255, 255, 255, 1); /* Alpha dims the borders */
     background-color: rgba(0, 0, 0, 1); /* Alpha changes bg visibility */
 }
@@ -270,11 +291,18 @@ body.dark-mode-active * {
     animation: spin 1s linear infinite;
 }
 
-#dark_mode, #randomize_input, #mem_lookup {
+#dark_mode,
+#randomize_input,
+#mem_lookup {
     cursor: pointer;
 }
 
-#dark_mode:focus, #randomize_input:focus, #mem_lookup:focus, #dark_mode:active, #randomize_input:active, #mem_lookup:active {
+#dark_mode:focus,
+#randomize_input:focus,
+#mem_lookup:focus,
+#dark_mode:active,
+#randomize_input:active,
+#mem_lookup:active {
     cursor: pointer;
 }
 
@@ -312,7 +340,8 @@ body.dark-mode-active * {
 
 /* Specific hover state for Firefox with -moz prefix */
 @-moz-document url-prefix() {
-    .button_small:hover, .button:hover {
+    .button_small:hover,
+    .button:hover {
         border: 1px solid var(--bg-color2); /* Reapply to ensure Firefox picks it up */
         color: var(--border-color-hover);
     }
@@ -323,8 +352,12 @@ body.dark-mode-active * {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @media screen and (max-height: 800px) {
@@ -340,7 +373,7 @@ body.dark-mode-active * {
         max-height: 550px;
         margin-bottom: 0;
     }
-    .calc_screen {
+    .calc_answer {
         min-height: 75px;
     }
 }
@@ -353,8 +386,14 @@ body.dark-mode-active * {
     .calc_body {
         margin-top: 15vh;
     }
+    .drag_handle {
+        bottom: 5px;
+        right: 5px;
+        width: 30px; /* Slightly smaller for mobile devices */
+        height: 30px;
+    }
 }
 
-@media screen and (min-width: 768px)  {    
+@media screen and (min-width: 768px) {
     /* Standard Desktop specific rules */
 }

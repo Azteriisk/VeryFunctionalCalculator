@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1080, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <script src="main.js" defer></script>
     <title>Very Functional Calculator</title>
@@ -17,9 +17,7 @@
         
         <!--START CALCULATOR-->
         <div class="calc_body">
-            <div draggable="true" class="calc_screen">
-                <div class="calc_answer"></div>
-            </div>
+            <div draggable="true" class="calc_answer"></div>
             <div class="calc_buttons">
                 <div class="button button_number" id="1">1</div>
                 <div class="button button_number" id="2">2</div>
@@ -39,6 +37,7 @@
                 </div>
                 <div class="button_large" id="submit">=</div>
             </div>
+            <img draggable="false" src="img/shake.svg" class="drag_handle" alt="Shake to Clear!">
         </div>
         <!--END CALCULATOR-->
         
