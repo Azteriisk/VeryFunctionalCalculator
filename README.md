@@ -16,13 +16,13 @@ Instead- because we know you crave nostalgia as much as us, there is a built-in 
 ![image](https://github.com/user-attachments/assets/e49231a8-0740-401c-a379-a729f010de8e)
 
 Meet our bottom row of best in class function buttons.<br>
-Up first, go even darker with DarkerMode™️.<br>
-Then if the average calculating experience isn't challenging you enough, try shuffle mode and keep shuffling to your heart's content.<br>
-And because we're nice people, a built in tool for looking up your memory address values by typing in or dragging and dropping the text right from the calculator's screen.<br><br>
+- Up first, go even darker with DarkerMode™️.<br>
+- Then if the average calculating experience isn't challenging you enough, try shuffle mode and keep shuffling to your heart's content.<br>
+- And because we're nice people, a built in tool for looking up your memory address values by typing in or dragging and dropping the text right from the calculator's screen.<br><br>
 
 Its not enough to only be the world's first in a 2 areas. I need 1 more.<br>
-So introducing the first digital calculator with a built in flip feature to do the one thing that technology has been preventing me from doing since i left Texas Instruments behind-<br>
-Just be sure to type in the only numbers that make sense to make it happen!<br><br>
+<em>So introducing the first digital calculator with a built in flip feature to do the one thing that technology has been preventing me from doing since i left Texas Instruments behind-</em><br>
+(( Just be sure to type in the only numbers that make sense to make it happen! ))<br><br>
 ![image](https://github.com/user-attachments/assets/e18b2e51-2d39-4b92-8c2a-fe83ef655d46)
 
 
