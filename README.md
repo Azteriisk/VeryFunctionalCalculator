@@ -1,6 +1,7 @@
 # VeryFunctionalCalculator
 CodingWithLewis Hackathon Project // Functionally Dysfunctional Calculator<br>
-Created by Alec Brandt in cooperation with Kapil Dev
+Created by Alec Brandt in cooperation with Kapil Dev<br><br>
+<a href="https://azteriisk.github.io/VeryFunctionalCalculator/" target="_blank">Try me! Click here.</a>
 
 <h2>What does it do?</h2>
 It is a calculator! Very functional in every way you would want.<br><br>
