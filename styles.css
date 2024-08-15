@@ -134,7 +134,7 @@ body:before {
     width: calc(2 * 60px + 30px); /* Adjust width to match the width of two buttons + gap */
     grid-column: span 2;
     grid-row: span 2;
-    border-radius: 15px;
+    border-radius: 25px;
     min-height: 150px;
     margin: 10px 0px;
     box-sizing: border-box;
@@ -200,7 +200,7 @@ body:before {
 }
 
 .functions_container .button {
-    margin: 40px 30px;
+    margin: 15px 30px 20px;
     min-width: 100px;
 }
 
