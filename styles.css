@@ -16,6 +16,7 @@ body {
     margin: 0;
     padding: 0;
     cursor: crosshair; /* Default cursor when dark mode is off */
+    overflow-x: hidden;
 }
 
 /* Flashlight Controls */
@@ -40,15 +41,36 @@ body:before {
     background-color: var(--bg-color);
 }
 
-.secret{
+.secret {
     text-align: center;
     position: absolute;
+    color: #fff; /* Ensure the text is white */
+    opacity: 0; /* Hide by default */
+    transition: opacity 0.3s ease-in-out;
+    z-index: 2; /* Ensure it appears above other elements */
+}
+
+body.dark-mode-active .secret {
+    opacity: 0.03; /* Slightly visible */
+}
+
+body.dark-mode-active .secret:before {
+    content: '';
+    position: absolute;
     top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+}
+
+body.dark-mode-active .secret:hover {
+    opacity: 0.8; /* Fully visible when flashlight is on it */
 }
 
 .calc_body {
     position: relative;
-    margin: 1vh 5vh;
     aspect-ratio: 2 / 3;
     min-height: 60vh;
     min-width: 400px;
@@ -57,10 +79,10 @@ body:before {
     border-radius: 30px;
     padding: 10px 2vw;
     transition: border 300ms, transform 0.5s ease;
-    margin-left: 1vw;
-    margin-right: 1vw;
+    margin: 1vh 1vw;
     overflow: hidden;
     background-color: var(--calc-color);
+    z-index: 1;
 }
 
 .calc_answer {
@@ -105,7 +127,7 @@ body:before {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-items: center;
     align-items: center;
-    gap: 0px; /* Define consistent gap */
+    gap: 0; /* Define consistent gap */
     user-select: none;
     margin: 25px 20px;
     box-sizing: border-box;
@@ -128,7 +150,7 @@ body:before {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 0px; /* Control the space between buttons */
+    gap: 0; /* Control the space between buttons */
     justify-items: center;
     align-items: center;
     width: calc(2 * 60px + 30px); /* Adjust width to match the width of two buttons + gap */
@@ -136,7 +158,7 @@ body:before {
     grid-row: span 2;
     border-radius: 25px;
     min-height: 150px;
-    margin: 10px 0px;
+    margin: 10px 0;
     box-sizing: border-box;
     background-color: var(--bg-color);
 }
@@ -149,7 +171,7 @@ body:before {
     align-items: center;
     justify-content: center;
     color: var(--bg-color2);
-    margin: 0px 5px; /* Ensure equal margin on all sides */
+    margin: 0 5px; /* Ensure equal margin on all sides */
     font-size: xx-large;
     box-sizing: border-box; /* Include padding in width/height calculations */
     background-color: var(--btn-color);
@@ -224,7 +246,7 @@ body:before {
     color: var(--bg-color2);
     position: absolute;
     top: -100%; /* Start above the title */
-    left: 0%; /* Start from 0 and adjust dynamically */
+    left: 0; /* Start from 0 and adjust dynamically */
     transform: translateX(-100%); /* Adjust the initial position to be off-screen */
     transition: top 1s ease-in-out, transform 1s ease-in-out;
     visibility: hidden; /* Initially hidden */
@@ -264,7 +286,7 @@ body:before {
 }
 
 .drag_handle:active {
-    cursor: none;
+    cursor: none !important;
     transform: rotate(-10deg) scale(1.1);
     filter: opacity(0.8);
 }
@@ -275,33 +297,6 @@ body:before {
 
 .hide-cursor {
     cursor: none !important;
-}
-
-/* Show the spotlight when dark mode is active */
-body.dark-mode-active:before {
-    display: block;
-}
-
-/* Dim or hide interactive elements in dark mode */
-body.dark-mode-active .calc_answer,
-body.dark-mode-active .calc_buttons .button,
-body.dark-mode-active .operations_container .button_small,
-body.dark-mode-active .button_large {
-    color: rgba(255, 255, 255, 1); /* Alpha channel changes visibility within the flashlight */
-    border-color: rgba(255, 255, 255, 1); /* Alpha dims the borders */
-    background-color: rgba(0, 0, 0, 1); /* Alpha changes bg visibility */
-}
-
-body.dark-mode-active .calc_body {
-    opacity: 0.03; /* Nearly invisible but slightly visible */
-}
-
-body.dark-mode-active .secret{
-    opacity: 0.01;
-}
-
-body.dark-mode-active * {
-    cursor: none !important; /* Ensure no custom cursors are visible in dark mode */
 }
 
 .throbber {
@@ -360,6 +355,31 @@ body.dark-mode-active * {
     filter: invert(70%) sepia(89%) saturate(1%) hue-rotate(10deg) brightness(106%) contrast(110%); /* Orange filter */
 }
 
+/* Show the spotlight when dark mode is active */
+body.dark-mode-active:before {
+    display: block;
+}
+
+/* Increase the visibility of elements when illuminated */
+body.dark-mode-active .calc_body,
+body.dark-mode-active .calc_answer,
+body.dark-mode-active .calc_buttons .button,
+body.dark-mode-active .operations_container .button_small,
+body.dark-mode-active .button_large {
+    opacity: 0.2 /* Base opacity in dark mode */
+}
+
+body.dark-mode-active .calc_answer:hover,
+body.dark-mode-active .calc_buttons .button:hover,
+body.dark-mode-active .operations_container .button_small:hover,
+body.dark-mode-active .button_large:hover {
+    opacity: 0.3 /* Increase visibility when flashlight is over it */
+}
+
+body.dark-mode-active * {
+    cursor: none !important; /* Ensure no custom cursors are visible in dark mode */
+}
+
 /* Specific hover state for Firefox with -moz prefix */
 @-moz-document url-prefix() {
     .button_small:hover,
@@ -382,40 +402,107 @@ body.dark-mode-active * {
     }
 }
 
-@media screen and (max-height: 800px) {
-    /* Widescreen/Horizontal Split format specific rules */
-    .container {
-        min-height: 800px;
-    }
-    .title {
-        display: none;
-    }
-    .calc_body {
-        margin-top: 15vh;
-        max-height: 550px;
-        margin-bottom: 0;
-    }
-    .calc_answer {
-        min-height: 75px;
-    }
-}
-
 @media screen and (max-width: 768px) {
     /* Mobile/Portrait specific rules */
+
+    /* Hide the title on smaller screens */
     .title {
         display: none;
     }
+
+    /* Adjust calculator body dimensions for mobile */
     .calc_body {
-        margin-top: 15vh;
+        width: 90vw; /* Full width minus some padding */
+        max-width: 320px; /* Max width for smaller phones */
+        padding: 2vh 2vw 5px 2vw; /* Reduced padding */
+        margin-top: 3vh; /* Reduce the margin-top to bring it closer to the top */
+        margin-bottom: 1vh;
     }
+
+    /* Adjust the display area */
+    .calc_answer {
+        min-height: 8vh;
+        margin: 10px;
+        padding: 0 15px;
+        font-size: x-large; /* Smaller font size */
+        border-radius: 20px;
+    }
+
+    /* Adjust button sizes for mobile */
+    .calc_buttons {
+        grid-template-rows: repeat(4, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .button, .button_small, .button_large {
+        width: 60px;
+        height: 60px;
+        font-size: large;
+    }
+
+    .button_large {
+        width: 120px; /* Adjusted for smaller screens */
+        height: 60px;
+    }
+
+    /* Adjust the drag handle for smaller screens */
     .drag_handle {
         bottom: 5px;
         right: 5px;
-        width: 30px; /* Slightly smaller for mobile devices */
+        width: 30px;
         height: 30px;
+    }
+
+    .functions_container {
+        margin-top: 5px; /* Add top margin for space between the calculator and function buttons */
+        margin-bottom: 0; /* Remove unnecessary bottom margin */
+    }
+
+    /* Reduce the size of function buttons */
+    .functions_container .button {
+        margin: 10px 15px;
+        min-width: 80px;
+        width: auto;
+    }
+    .container {
+        padding-bottom: 0; /* Remove unnecessary bottom padding */
+        margin-bottom: 0; /* Remove unnecessary bottom margin */
+    }
+    .drag_handle {
+        margin: 0 2vw 2vh 0;
     }
 }
 
-@media screen and (min-width: 768px) {
-    /* Standard Desktop specific rules */
+@media screen and (max-width: 480px) {
+    /* Very small mobile devices */
+
+    .calc_body {
+        width: 100vw; /* Full width */
+        max-width: 280px; /* Further reduce for very small screens */
+        padding: 2vh 1vw 5px 1vw;
+        margin-bottom: 1vh;
+    }
+
+    .calc_answer {
+        font-size: x-large; /* Further reduce font size */
+        padding: 0 10px;
+    }
+
+    .button, .button_small, .button_large {
+        width: 55px;
+        height: 55px;
+        font-size: medium;
+    }
+
+    .button_large {
+        width: 100px;
+        height: 50px;
+    }
+    .functions_container {
+        margin-top: 15px; /* Add top margin for space between the calculator and function buttons */
+        margin-bottom: 0; /* Remove unnecessary bottom margin */
+    }
+    .drag_handle {
+        margin: 0 2vw 2vh 0;
+    }
 }
