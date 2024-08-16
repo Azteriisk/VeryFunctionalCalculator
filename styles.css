@@ -40,6 +40,7 @@ body:before {
     align-items: center;
     color: var(--text-color);
     background-color: var(--bg-color);
+    overflow-x: hidden;
 }
 
 .secret {
