@@ -52,6 +52,7 @@ body:before {
 
 body.dark-mode-active .secret {
     opacity: 0.03; /* Slightly visible */
+    transition: opacity 0.5s ease-in-out;
 }
 
 body.dark-mode-active .secret:before {
@@ -66,7 +67,7 @@ body.dark-mode-active .secret:before {
 }
 
 body.dark-mode-active .secret:hover {
-    opacity: 0.8; /* Fully visible when flashlight is on it */
+    opacity: 0.3; /* Fully visible when flashlight is on it */
 }
 
 .calc_body {
