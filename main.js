@@ -1,3 +1,4 @@
+//<!--Code by Alec Brandt -->//
 //-------REFERENCE ELEMENTS-------//
 const calcBody = document.querySelector('.calc_body');
 const calcAnswer = document.querySelector('.calc_answer');
